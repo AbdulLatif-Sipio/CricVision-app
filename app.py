@@ -87,6 +87,33 @@ st.markdown("""
         color: #1E293B !important;
     }
 
+    /* ========================================================================
+       SIDEBAR EXPLICIT STYLING (Crisp Clean Stadium White)
+       ======================================================================== */
+    [data-testid="stSidebar"], section[data-testid="stSidebar"] > div {
+        background-color: #FFFFFF !important;
+        border-right: 2px solid #E2E8F0 !important;
+    }
+    [data-testid="stSidebar"] * {
+        color: #0F172A !important;
+    }
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] label {
+        color: #0F172A !important;
+    }
+    [data-testid="stSidebar"] div[data-testid="stAlert"] {
+        background-color: #F0FDF4 !important;
+        border: 1px solid #86EFAC !important;
+        border-radius: 12px !important;
+    }
+    [data-testid="stSidebar"] div[data-testid="stAlert"] * {
+        color: #064E3B !important;
+    }
+
     /* Streamlit built-in markdown containers */
     div[data-testid="stMarkdownContainer"] p,
     div[data-testid="stMarkdownContainer"] span {
