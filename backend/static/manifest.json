@@ -1,0 +1,26 @@
+{
+  "name": "CricVision & CricTutor AI",
+  "short_name": "CricVision",
+  "description": "Grassroots AI Cricket Biomechanics, Legality Screening & Coaching",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "background_color": "#070B09",
+  "theme_color": "#84CC16",
+  "orientation": "portrait-primary",
+  "categories": ["sports", "health", "fitness"],
+  "icons": [
+    {
+      "src": "/static/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

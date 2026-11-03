@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CricVision & CricTutor AI — Grassroots Biomechanics & Coaching</title>
+    <!-- PWA Manifest & Mobile Standalone Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#84CC16">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CricVision">
+    <link rel="apple-touch-icon" href="/static/icon-192.png">
+    <!-- Tailwind CSS with Athletic Lime & Deep Charcoal Theme -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        charcoal: {
+                            950: '#070B09',
+                            900: '#0D1410',
+                            850: '#131D17',
+                            800: '#1B2921',
+                            700: '#283D31',
+                            600: '#3A5445'
+                        },
+                        lime: {
+                            400: '#A3E635',
+                            500: '#84CC16',
+                            600: '#65A30D'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #070B09;
+            color: #F3F4F6;
+        }
+        .card-athletic {
+            background: rgba(19, 29, 23, 0.75);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(132, 204, 22, 0.15);
+            transition: all 0.2s ease-in-out;
+        }
+        .card-athletic:hover {
+            border-color: rgba(132, 204, 22, 0.35);
+        }
+        .glow-lime {
+            box-shadow: 0 0 25px rgba(132, 204, 22, 0.15);
+        }
+        .tab-btn.active {
+            color: #84CC16;
+            border-bottom: 2px solid #84CC16;
+            background: rgba(132, 204, 22, 0.08);
+        }
+        .badge-screening {
+            background: rgba(132, 204, 22, 0.12);
+            border: 1px solid rgba(132, 204, 22, 0.3);
+            color: #A3E635;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-lime-500 selection:text-black">
+
+    <!-- Top Header Bar -->
+    <header class="border-b border-charcoal-700/60 bg-charcoal-900/90 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between py-3">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-lime-600 to-lime-400 flex items-center justify-center font-black text-xl shadow-lg shadow-lime-500/20 text-charcoal-950">
+                    🏏
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-tight text-white flex items-center gap-2">
+                        CRICVISION <span class="text-[10px] px-2 py-0.5 rounded-full bg-lime-500/20 text-lime-400 font-extrabold border border-lime-500/30">CRICTUTOR 2.0</span>
+                    </h1>
+                    <p class="text-[11px] text-gray-400 font-medium">Analyze. Train. Improve.</p>
+                </div>
+            </div>
+
+            <!-- 5 Main Navigation Tabs (Desktop Header) -->
+            <nav class="hidden md:flex items-center space-x-1 bg-charcoal-850 px-2 py-1 rounded-xl border border-charcoal-700/60 text-xs font-bold">
+                <button onclick="switchTab('home')" id="tabNav-home" class="tab-btn active px-4 py-2 rounded-lg text-gray-300 hover:text-white transition flex items-center gap-2">
+                    <span>🏠</span> Home
+                </button>
+                <button onclick="switchTab('analyze')" id="tabNav-analyze" class="tab-btn px-4 py-2 rounded-lg text-gray-300 hover:text-white transition flex items-center gap-2">
+                    <span>🎥</span> Analyze
+                </button>
+                <button onclick="switchTab('progress')" id="tabNav-progress" class="tab-btn px-4 py-2 rounded-lg text-gray-300 hover:text-white transition flex items-center gap-2">
+                    <span>📈</span> Progress
+                </button>
+                <button onclick="switchTab('tutor')" id="tabNav-tutor" class="tab-btn px-4 py-2 rounded-lg text-gray-300 hover:text-white transition flex items-center gap-2">
+                    <span>🏏</span> Tutor
+                </button>
+                <button onclick="switchTab('profile')" id="tabNav-profile" class="tab-btn px-4 py-2 rounded-lg text-gray-300 hover:text-white transition flex items-center gap-2">
+                    <span>👤</span> Profile
+                </button>
+            </nav>
+
+            <!-- Offline Badge & Quick Stats -->
+            <div class="flex items-center space-x-3">
+                <div class="hidden sm:flex items-center space-x-2 bg-charcoal-850 px-3 py-1.5 rounded-lg border border-charcoal-700/60 text-xs font-semibold">
+                    <span class="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
+                    <span class="text-gray-300">100% Offline Edge</span>
+                </div>
+                <button id="btnInstallPwa" onclick="installPwa()" class="px-3 py-1.5 rounded-lg bg-charcoal-850 hover:bg-charcoal-800 text-lime-400 border border-lime-500/40 font-bold text-xs transition flex items-center gap-1.5">
+                    <span>📲</span> Install App
+                </button>
+                <button onclick="switchTab('analyze')" class="px-3 py-1.5 rounded-lg bg-lime-500 hover:bg-lime-400 text-charcoal-950 font-black text-xs transition shadow-md shadow-lime-500/20">
+                    + New Video
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-grow">
+
+        <!-- ================================================================= -->
+        <!-- TAB 1: HOME DASHBOARD -->
+        <!-- ================================================================= -->
+        <section id="tab-home" class="space-y-6">
+            <!-- Hero Greeting & CTA Banner -->
+            <div class="card-athletic rounded-3xl p-6 sm:p-8 relative overflow-hidden glow-lime">
+                <div class="relative z-10 max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-screening text-xs font-extrabold mb-3">
+                        <span>⚡</span> On-Device Biomechanics Laboratory
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white leading-tight">
+                        Analyze your action.<br><span class="text-lime-400">Fix the #1 flaw. Measure progress.</span>
+                    </h2>
+                    <p class="text-sm text-gray-300 mt-2 mb-6">
+                        No expensive academy license required. Record with any smartphone, screen your bowling legality under ICC guidelines, and practice free grassroots DIY drills.
+                    </p>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button onclick="switchTab('analyze')" class="px-6 py-3 rounded-xl bg-lime-500 hover:bg-lime-400 text-charcoal-950 font-black text-sm transition shadow-lg shadow-lime-500/25 flex items-center gap-2">
+                            <span>🎥</span> Analyze a Video Now
+                        </button>
+                        <button onclick="openCameraGuideModal()" class="px-4 py-3 rounded-xl bg-charcoal-850 hover:bg-charcoal-800 text-gray-200 border border-charcoal-700 font-bold text-xs transition flex items-center gap-2">
+                            <span>📐</span> Camera Setup Guide
+                        </button>
+                    </div>
+                </div>
+                <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none text-[220px]">
+                    🏏
+                </div>
+            </div>
+
+            <!-- 3 Stat Highlight Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="card-athletic rounded-2xl p-5 border-l-4 border-l-lime-500">
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Weekly Training Streak</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <span class="text-3xl font-black text-white">4</span>
+                        <span class="text-xs text-lime-400 font-bold">days active</span>
+                    </div>
+                    <p class="text-[11px] text-gray-400 mt-1">Consistency builds repeatable muscle memory.</p>
+                </div>
+                <div class="card-athletic rounded-2xl p-5 border-l-4 border-l-cyan-500">
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Recommended Grassroots Drill</p>
+                    <p class="text-base font-bold text-cyan-300 mt-1 truncate">Rigid Wall-Slide Rotation</p>
+                    <button onclick="switchTab('tutor')" class="text-xs text-cyan-400 hover:underline font-bold mt-1 inline-block">View 7-day schedule →</button>
+                </div>
+                <div class="card-athletic rounded-2xl p-5 border-l-4 border-l-amber-500">
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Progress Comparison</p>
+                    <p class="text-base font-bold text-amber-300 mt-1">Session A vs. Session B</p>
+                    <button onclick="switchTab('progress')" class="text-xs text-amber-400 hover:underline font-bold mt-1 inline-block">Compare Before & After →</button>
+                </div>
+            </div>
+
+            <!-- Recent Sessions Preview Table -->
+            <div class="card-athletic rounded-2xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-base font-bold text-white flex items-center gap-2">
+                        <span>📜</span> Recent Analytical Sessions
+                    </h3>
+                    <button onclick="fetchHistory()" class="text-xs text-lime-400 font-bold hover:underline">Refresh</button>
+                </div>
+                <div id="homeRecentSessions" class="space-y-2">
+                    <div class="text-center py-6 text-xs text-gray-400">Loading recent session history...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 2: ANALYZE SCREEN -->
+        <!-- ================================================================= -->
+        <section id="tab-analyze" class="hidden space-y-6">
+            <!-- Step 1: Mode Selector & Upload Box -->
+            <div class="card-athletic rounded-2xl p-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                    <div>
+                        <h2 class="text-xl font-black text-white flex items-center gap-2">
+                            <span>🎥</span> Video Analysis & Screening
+                        </h2>
+                        <p class="text-xs text-gray-400">Upload a bowling delivery or batting stroke for instant biomechanical analysis.</p>
+                    </div>
+                    <!-- Activity Toggle -->
+                    <div class="flex items-center bg-charcoal-850 p-1 rounded-xl border border-charcoal-700 text-xs font-bold">
+                        <button id="btnModeBowling" onclick="setActivityMode('Bowling')" class="px-4 py-1.5 rounded-lg bg-lime-500 text-charcoal-950 font-black transition">Bowling Action</button>
+                        <button id="btnModeBatting" onclick="setActivityMode('Batting')" class="px-4 py-1.5 rounded-lg text-gray-300 hover:text-white transition">Batting Stroke</button>
+                    </div>
+                </div>
+
+                <!-- Camera Angle Notification Banner -->
+                <div class="bg-charcoal-850 rounded-xl p-3 mb-4 border border-charcoal-700/80 flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="text-lime-400 text-base">📐</span>
+                        <span>For optimal elbow screening, record <strong>Side-On (waist height, 5-7m away at 60fps)</strong>.</span>
+                    </div>
+                    <button onclick="openCameraGuideModal()" class="text-lime-400 hover:underline font-bold shrink-0">View Guide</button>
+                </div>
+
+                <!-- Drag and Drop Area -->
+                <div id="dropZone" class="border-2 border-dashed border-charcoal-700 hover:border-lime-500/60 rounded-2xl p-8 text-center transition cursor-pointer bg-charcoal-900/40">
+                    <input type="file" id="videoFileInput" accept="video/mp4,video/mov,video/avi,image/jpeg,image/png" class="hidden" onchange="handleFileSelect(event)">
+                    <div onclick="document.getElementById('videoFileInput').click()" class="space-y-3">
+                        <div class="w-14 h-14 rounded-2xl bg-charcoal-850 border border-charcoal-700 flex items-center justify-center mx-auto text-2xl text-lime-400">
+                            📁
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-white">Click to select video or drag & drop here</p>
+                            <p class="text-xs text-gray-400 mt-1">MP4, MOV, or photo up to 50MB</p>
+                        </div>
+                        <div id="selectedFileBanner" class="hidden inline-block bg-lime-500/10 border border-lime-500/30 text-lime-300 px-3 py-1 rounded-full text-xs font-bold">
+                            Selected file
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Test Preset Buttons -->
+                <div class="mt-4 pt-4 border-t border-charcoal-700/60 flex flex-wrap items-center gap-2 text-xs">
+                    <span class="text-gray-400 font-semibold mr-1">Quick Sample Clips:</span>
+                    <button onclick="loadSamplePreset('samples/sample_legal_side_on.mp4', 'Bowling')" class="px-3 py-1.5 rounded-lg bg-charcoal-850 hover:bg-charcoal-800 border border-charcoal-700 text-gray-200 transition">
+                        🟢 Legal Side-On Pace
+                    </button>
+                    <button onclick="loadSamplePreset('samples/sample_illegal_chucking.mp4', 'Bowling')" class="px-3 py-1.5 rounded-lg bg-charcoal-850 hover:bg-charcoal-800 border border-charcoal-700 text-gray-200 transition">
+                        🔴 Chucking Screening (Elbow Flex)
+                    </button>
+                    <button onclick="loadSamplePreset('samples/sample_sling_malinga.mp4', 'Bowling')" class="px-3 py-1.5 rounded-lg bg-charcoal-850 hover:bg-charcoal-800 border border-charcoal-700 text-gray-200 transition">
+                        ⚡ Round-Arm Slinger (Malinga)
+                    </button>
+                    <button onclick="loadSamplePreset('samples/sample_cover_drive.mp4', 'Batting')" class="px-3 py-1.5 rounded-lg bg-charcoal-850 hover:bg-charcoal-800 border border-charcoal-700 text-gray-200 transition">
+                        🏏 Cover Drive (Batting)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Analysis Progress Spinner -->
+            <div id="analysisSpinner" class="hidden card-athletic rounded-2xl p-8 text-center space-y-3">
+                <div class="w-12 h-12 border-4 border-charcoal-700 border-t-lime-500 rounded-full animate-spin mx-auto"></div>
+                <h3 class="text-base font-bold text-white" id="spinnerText">Analyzing 33 3D Biomechanical Pose Landmarks...</h3>
+                <p class="text-xs text-gray-400" id="spinnerSubtext">Segmenting Gather ➔ Back-Foot Contact ➔ Front-Foot Contact ➔ Release</p>
+            </div>
+
+            <!-- Results View: Structured Coaching Hierarchy -->
+            <div id="resultsContainer" class="hidden space-y-6">
+
+                <!-- 1. The Single Most Critical Bottleneck Card (Primary Observation) -->
+                <div class="card-athletic rounded-3xl p-6 border-l-8 border-l-lime-500 bg-gradient-to-r from-charcoal-900 via-charcoal-850 to-charcoal-850">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <span class="px-3 py-1 rounded-full text-xs font-black bg-lime-500 text-charcoal-950 uppercase tracking-wider">
+                            🎯 Single Key Technique Priority
+                        </span>
+                        <div class="flex items-center gap-2">
+                            <span id="resConfidenceBadge" class="badge-screening text-xs px-2.5 py-0.5 rounded-full font-bold">HIGH CONFIDENCE</span>
+                            <button onclick="speakMainObservation()" class="px-2.5 py-1 rounded-lg bg-charcoal-800 hover:bg-charcoal-700 text-xs font-bold text-lime-400 flex items-center gap-1">
+                                <span>🔊</span> Listen to Coach
+                            </button>
+                        </div>
+                    </div>
+
+                    <h3 id="resMainObs" class="text-xl sm:text-2xl font-black text-white">
+                        Front knee collapsed upon front-foot landing (138°).
+                    </h3>
+                    <div class="mt-2 text-sm text-gray-300">
+                        <span class="text-lime-400 font-bold">What This Means:</span>
+                        <span id="resWhatMeans" class="ml-1">Your front leg absorbed the landing force like a cushion instead of a rigid catapult lever, leaking bowling velocity.</span>
+                    </div>
+
+                    <!-- Prescribed Drill Box -->
+                    <div class="mt-4 p-4 rounded-2xl bg-charcoal-900 border border-charcoal-700/80">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-xs font-extrabold text-lime-400 uppercase tracking-wider">🛠️ Recommended Practice Drill</span>
+                            <span id="resDrillReps" class="text-xs text-gray-400 font-semibold">3 sets of 10 deliveries</span>
+                        </div>
+                        <h4 id="resDrillName" class="text-base font-bold text-white">The Step-Over Cone Bracing Drill</h4>
+                        <p id="resDrillEquip" class="text-xs text-gray-400 mt-0.5">Equipment needed: Chalk mark or tennis ball on crease</p>
+                        <ul id="resDrillSteps" class="mt-2 space-y-1 text-xs text-gray-300 list-disc list-inside"></ul>
+                        <p id="resDrillSafety" class="mt-2 text-[11px] text-amber-300/90 font-medium">Safety: Warm up hamstrings before attempting full knee locks.</p>
+                    </div>
+
+                    <div class="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-charcoal-700/60 text-xs">
+                        <div>
+                            <span class="text-gray-400">Next session target: </span>
+                            <strong id="resNextFocus" class="text-white">Reach knee angle >= 165°</strong>
+                        </div>
+                        <button onclick="openFeedbackModal()" class="text-xs text-gray-400 hover:text-white font-semibold underline">
+                            Dismiss or correct this feedback
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. Evidence Grid: Pose Visual Overlay + Measurements -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Left: Release Frame Visual Overlay -->
+                    <div class="lg:col-span-5 card-athletic rounded-2xl p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                                    <span>📸</span> Biomechanical Evidence (Release Instant)
+                                </h4>
+                                <span id="resStatusBadge" class="text-xs px-2.5 py-0.5 rounded-full font-black bg-lime-500/20 text-lime-400 border border-lime-500/30">LEGAL</span>
+                            </div>
+                            <div class="aspect-video bg-black/60 rounded-xl overflow-hidden border border-charcoal-700 flex items-center justify-center">
+                                <img id="resAnnotatedImg" src="" alt="Pose Overlay" class="w-full h-full object-contain">
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-charcoal-700/60 text-xs text-gray-400 flex justify-between">
+                            <span>Elbow: <strong id="resLblElbow" class="text-white">--°</strong></span>
+                            <span>Front Knee: <strong id="resLblKnee" class="text-white">--°</strong></span>
+                            <span>ICC Tolerance: <strong class="text-lime-400">15.0°</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Right: Key Metric Cards -->
+                    <div class="lg:col-span-7 grid grid-cols-2 gap-4">
+                        <div class="card-athletic rounded-xl p-4 border-l-4 border-l-lime-500">
+                            <p class="text-xs font-bold text-gray-400 uppercase">Elbow Straightening</p>
+                            <p id="resElbowVal" class="text-2xl font-black text-white mt-1">--°</p>
+                            <p id="resIccStatus" class="text-[11px] text-lime-400 mt-0.5 font-bold">Compliant (&lt;= 15.0°)</p>
+                        </div>
+                        <div class="card-athletic rounded-xl p-4 border-l-4 border-l-cyan-500">
+                            <p class="text-xs font-bold text-gray-400 uppercase">Estimated Release Pace</p>
+                            <p id="resSpeedKmh" class="text-2xl font-black text-cyan-400 mt-1">-- km/h</p>
+                            <p id="resSpeedNote" class="text-[11px] text-gray-400 mt-0.5">Kinematic Chain Estimate</p>
+                        </div>
+                        <div class="card-athletic rounded-xl p-4 border-l-4 border-l-amber-500">
+                            <p class="text-xs font-bold text-gray-400 uppercase">Bowling Twin Legend</p>
+                            <p id="resTwinLegend" class="text-lg font-bold text-amber-300 mt-1 truncate">--</p>
+                            <p id="resTwinStyle" class="text-[11px] text-gray-400 mt-0.5 truncate">Style match</p>
+                        </div>
+                        <div class="card-athletic rounded-xl p-4 border-l-4 border-l-indigo-500">
+                            <p class="text-xs font-bold text-gray-400 uppercase">Delivery Pitch Zone</p>
+                            <p id="resPitchZone" class="text-base font-bold text-indigo-300 mt-1 truncate">--</p>
+                            <p class="text-[11px] text-gray-400 mt-0.5">Target Corridor</p>
+                        </div>
+                        <!-- Screening Disclaimer -->
+                        <div class="col-span-2 bg-charcoal-900/60 rounded-xl p-3 border border-charcoal-700/80 text-[11px] text-gray-400">
+                            <strong>Note:</strong> <span id="resDisclaimer">This is an estimated screening indicator based on 2D video pose estimation for coaching guidance. It does not replace official 3D accredited laboratory testing.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Button Row -->
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+                    <button onclick="switchTab('progress')" class="px-5 py-2.5 rounded-xl bg-charcoal-850 hover:bg-charcoal-800 text-gray-200 border border-charcoal-700 text-xs font-bold transition flex items-center gap-1.5">
+                        <span>📈</span> Compare with Previous Session
+                    </button>
+                    <button onclick="switchTab('tutor')" class="px-5 py-2.5 rounded-xl bg-lime-500 hover:bg-lime-400 text-charcoal-950 text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-lime-500/20">
+                        <span>📅</span> Create Weekly Practice Plan →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 3: PROGRESS & COMPARISON SCREEN -->
+        <!-- ================================================================= -->
+        <section id="tab-progress" class="hidden space-y-6">
+            <!-- 1. Before vs After Session Comparator Tool -->
+            <div class="card-athletic rounded-3xl p-6 glow-lime">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                    <div>
+                        <h2 class="text-xl font-black text-white flex items-center gap-2">
+                            <span>⚖️</span> Before & After Session Comparator
+                        </h2>
+                        <p class="text-xs text-gray-400">Select any two sessions to verify whether your practice drills are actually improving your mechanics.</p>
+                    </div>
+                    <button onclick="executeSessionComparison()" class="px-4 py-2 rounded-xl bg-lime-500 hover:bg-lime-400 text-charcoal-950 font-black text-xs transition shadow-md shadow-lime-500/20">
+                        Compare Now
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 mb-1">Session A (Baseline / Older):</label>
+                        <select id="compSessionA" class="w-full bg-charcoal-900 border border-charcoal-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-lime-500">
+                            <option value="">Select Baseline Session...</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 mb-1">Session B (Current / Newer):</label>
+                        <select id="compSessionB" class="w-full bg-charcoal-900 border border-charcoal-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-lime-500">
+                            <option value="">Select Current Session...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Comparison Delta Results Box -->
+                <div id="comparisonResultsBox" class="hidden mt-6 p-5 rounded-2xl bg-charcoal-900 border border-charcoal-700 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span id="compVerdictBadge" class="text-xs px-3 py-1 rounded-full font-black bg-lime-500 text-charcoal-950">EXCELLENT PROGRESS</span>
+                        <span id="compDaysBetween" class="text-xs text-gray-400">14 days between sessions</span>
+                    </div>
+
+                    <h4 id="compCoachVerdict" class="text-base font-bold text-white">Outstanding development! Technique scorecard surged by +16.0 points.</h4>
+
+                    <!-- Delta Metric Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="card-athletic rounded-xl p-3 border-l-4 border-l-lime-500">
+                            <p class="text-[11px] font-bold text-gray-400">Front Knee Bracing</p>
+                            <p id="compDeltaKnee" class="text-lg font-black text-lime-400 mt-0.5">+24.0° (Firmer)</p>
+                            <p class="text-[10px] text-gray-400">Converts more run-up speed</p>
+                        </div>
+                        <div class="card-athletic rounded-xl p-3 border-l-4 border-l-cyan-500">
+                            <p class="text-[11px] font-bold text-gray-400">Elbow Straightening</p>
+                            <p id="compDeltaElbow" class="text-lg font-black text-cyan-400 mt-0.5">-7.3° (Cleaner)</p>
+                            <p class="text-[10px] text-gray-400">Cleaner arm circle rotation</p>
+                        </div>
+                        <div class="card-athletic rounded-xl p-3 border-l-4 border-l-amber-500">
+                            <p class="text-[11px] font-bold text-gray-400">Technique Score</p>
+                            <p id="compDeltaScore" class="text-lg font-black text-amber-300 mt-0.5">+16.0 pts</p>
+                            <p class="text-[10px] text-gray-400">Biomechanical index gain</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="text-xs font-bold text-lime-400">Verified Gains:</p>
+                        <ul id="compImprovementsList" class="text-xs text-gray-300 list-disc list-inside mt-1 space-y-0.5"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Multi-Delivery Over Consistency Analyzer -->
+            <div class="card-athletic rounded-3xl p-6">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <h3 class="text-lg font-black text-white flex items-center gap-2">
+                            <span>🎯</span> Multi-Delivery Spell Consistency
+                        </h3>
+                        <p class="text-xs text-gray-400">Analyze delivery-to-delivery repeatability across an entire over.</p>
+                    </div>
+                    <button onclick="runSampleMultiDelivery()" class="px-3 py-1.5 rounded-lg bg-charcoal-850 hover:bg-charcoal-800 border border-charcoal-700 text-xs text-gray-200 font-bold transition">
+                        Run Sample 4-Ball Net Spell
+                    </button>
+                </div>
+
+                <div id="multiDeliveryResults" class="space-y-3">
+                    <p class="text-xs text-gray-400 py-2">Click 'Run Sample 4-Ball Net Spell' or upload multiple deliveries to evaluate delivery repeatability.</p>
+                </div>
+            </div>
+
+            <!-- 3. Full Session History Table -->
+            <div class="card-athletic rounded-2xl p-6">
+                <h3 class="text-base font-bold text-white mb-3">Complete Saved Sessions</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="border-b border-charcoal-700 text-gray-400 uppercase font-semibold">
+                                <th class="pb-2">Date</th>
+                                <th class="pb-2">Type</th>
+                                <th class="pb-2">Elbow Ext</th>
+                                <th class="pb-2">Status</th>
+                                <th class="pb-2">Score</th>
+                                <th class="pb-2">Twin Legend</th>
+                                <th class="pb-2 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody" class="divide-y divide-charcoal-800">
+                            <tr><td colspan="7" class="py-4 text-center text-gray-400">Loading sessions...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 4: TUTOR & WEEKLY PLAN SCREEN -->
+        <!-- ================================================================= -->
+        <section id="tab-tutor" class="hidden space-y-6">
+            <!-- 1. 7-Day Grassroots Training Calendar Generator -->
+            <div class="card-athletic rounded-3xl p-6 glow-lime">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                    <div>
+                        <h2 class="text-xl font-black text-white flex items-center gap-2">
+                            <span>📅</span> 7-Day Grassroots Practice Plan Generator
+                        </h2>
+                        <p class="text-xs text-gray-400">Personalized weekly schedule using accessible street materials (tennis ball, chalk, walls).</p>
+                    </div>
+                    <button onclick="generateWeeklyPlan()" class="px-4 py-2 rounded-xl bg-lime-500 hover:bg-lime-400 text-charcoal-950 font-black text-xs transition shadow-md shadow-lime-500/20">
+                        Generate Plan
+                    </button>
+                </div>
+
+                <!-- Config Selectors -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 mb-1">Target Flaw to Correct:</label>
+                        <select id="planFlawSelect" class="w-full bg-charcoal-900 border border-charcoal-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-lime-500">
+                            <option value="collapsed_front_knee">Collapsed Front Knee at Impact (Power Loss)</option>
+                            <option value="chucking_elbow_flexion">Dynamic Elbow Straightening (Screening Flaw)</option>
+                            <option value="mixed_action_counter_rotation">Mixed Bowling Action (Torso Counter-Rotation)</option>
+                            <option value="head_falling_away">Head Falling Away to Off-Side</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 mb-1">Skill Level:</label>
+                        <select id="planLevelSelect" class="w-full bg-charcoal-900 border border-charcoal-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-lime-500">
+                            <option value="Beginner">Beginner (School / Gully)</option>
+                            <option value="Intermediate" selected>Intermediate (Club / Academy)</option>
+                            <option value="Advanced">Advanced (First-Class Prep)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Daily Schedule Display -->
+                <div id="weeklyPlanOutput" class="space-y-3">
+                    <p class="text-xs text-gray-400 py-2">Click 'Generate Plan' to create your customized 7-day schedule.</p>
+                </div>
+            </div>
+
+            <!-- 2. CricTutor AI Interactive Q&A Chat -->
+            <div class="card-athletic rounded-2xl p-6">
+                <h3 class="text-base font-bold text-white mb-2 flex items-center gap-2">
+                    <span>💬</span> Ask CricTutor AI
+                </h3>
+                <p class="text-xs text-gray-400 mb-4">Ask technical bowling questions or get explanations in simple English or Urdu.</p>
+
+                <!-- Suggested Quick Prompts -->
+                <div class="flex flex-wrap gap-2 mb-4 text-xs">
+                    <button onclick="askTutorPrompt('Why does my front knee keep collapsing?')" class="px-3 py-1 rounded-full bg-charcoal-850 hover:bg-charcoal-800 border border-charcoal-700 text-gray-300">
+                        "Why does my front knee collapse?"
+                    </button>
+                    <button onclick="askTutorPrompt('Explain the ICC 15-degree rule simply.')" class="px-3 py-1 rounded-full bg-charcoal-850 hover:bg-charcoal-800 border border-charcoal-700 text-gray-300">
+                        "Explain 15° rule simply"
+                    </button>
+                    <button onclick="askTutorPrompt('How do I bowl faster without straining my back?')" class="px-3 py-1 rounded-full bg-charcoal-850 hover:bg-charcoal-800 border border-charcoal-700 text-gray-300">
+                        "How do I bowl faster safely?"
+                    </button>
+                </div>
+
+                <!-- Chat Box -->
+                <div id="chatHistoryBox" class="h-48 overflow-y-auto bg-charcoal-900/80 rounded-xl p-3 border border-charcoal-700/80 space-y-2 mb-3 text-xs">
+                    <div class="p-2.5 rounded-lg bg-charcoal-850 text-gray-300 border border-charcoal-700/60">
+                        <strong class="text-lime-400">CricTutor:</strong> Salaam! I'm your offline-first cricket biomechanics coach. Ask me about your bowling action, pace generation, or drill technique!
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <input type="text" id="chatInput" placeholder="Ask a coaching question..." class="flex-grow bg-charcoal-900 border border-charcoal-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-lime-500" onkeydown="if(event.key==='Enter') sendChatMessage()">
+                    <button onclick="sendChatMessage()" class="px-4 py-2 rounded-xl bg-lime-500 hover:bg-lime-400 text-charcoal-950 font-black text-xs transition">Send</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 5: PROFILE & PRIVACY SCREEN -->
+        <!-- ================================================================= -->
+        <section id="tab-profile" class="hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 1. Player Profile Settings -->
+                <div class="card-athletic rounded-2xl p-6 space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <span>👤</span> Player Profile
+                    </h3>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 mb-1">Player Name:</label>
+                        <input type="text" id="profName" value="Grassroots Player" class="w-full bg-charcoal-900 border border-charcoal-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-lime-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 mb-1">Primary Role:</label>
+                        <select id="profRole" class="w-full bg-charcoal-900 border border-charcoal-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-lime-500">
+                            <option value="Fast Bowler" selected>Fast / Medium Bowler</option>
+                            <option value="Spin Bowler">Spin Bowler</option>
+                            <option value="Top-Order Batter">Top-Order Batter</option>
+                            <option value="All-Rounder">All-Rounder</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 mb-1">Dominant Arm:</label>
+                        <select id="profArm" class="w-full bg-charcoal-900 border border-charcoal-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-lime-500">
+                            <option value="Right-Arm" selected>Right-Arm</option>
+                            <option value="Left-Arm">Left-Arm</option>
+                        </select>
+                    </div>
+                    <button onclick="saveProfile()" class="px-4 py-2 rounded-xl bg-lime-500 hover:bg-lime-400 text-charcoal-950 font-black text-xs transition">
+                        Save Preferences
+                    </button>
+                </div>
+
+                <!-- 2. Privacy & Storage Management -->
+                <div class="card-athletic rounded-2xl p-6 space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <span>🔒</span> Privacy & Storage Controls
+                    </h3>
+                    <div class="p-3 rounded-xl bg-charcoal-900 border border-charcoal-700 text-xs space-y-2">
+                        <div class="flex items-center gap-2 text-lime-400 font-bold">
+                            <span>🛡️</span> Analyzed 100% On-Device
+                        </div>
+                        <p class="text-gray-300">
+                            Videos and biomechanical pose extractions run on your device. We never sell or share biometric movement profiles.
+                        </p>
+                    </div>
+
+                    <div class="space-y-2 pt-2">
+                        <h4 class="text-xs font-bold text-gray-300 uppercase">Storage Cleanup</h4>
+                        <p class="text-xs text-gray-400">
+                            Save phone space by purging raw video files while permanently keeping all extracted angles, scores, and coaching reports.
+                        </p>
+                        <button onclick="purgeRecentVideo()" class="px-3 py-2 rounded-xl bg-charcoal-850 hover:bg-charcoal-800 text-red-400 border border-red-500/30 text-xs font-bold transition">
+                            🗑️ Delete Latest Session Video File
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. System Architecture & Camera Specs Guide -->
+            <div class="card-athletic rounded-2xl p-6">
+                <h3 class="text-base font-bold text-white mb-2">📐 Official Camera Setup & Distance Rules</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs mt-3">
+                    <div class="p-3 bg-charcoal-900 rounded-xl border border-charcoal-700">
+                        <p class="font-bold text-lime-400 mb-1">Side-On Distance</p>
+                        <p class="text-gray-300">5.0 to 7.0 meters perpendicular to crease. Keeps entire body visible from gather to release.</p>
+                    </div>
+                    <div class="p-3 bg-charcoal-900 rounded-xl border border-charcoal-700">
+                        <p class="font-bold text-cyan-400 mb-1">Tripod Height</p>
+                        <p class="text-gray-300">1.0 to 1.2 meters (waist height). Prevents perspective foreshortening distortion.</p>
+                    </div>
+                    <div class="p-3 bg-charcoal-900 rounded-xl border border-charcoal-700">
+                        <p class="font-bold text-amber-300 mb-1">Recommended FPS</p>
+                        <p class="text-gray-300">60 fps or 120 fps slow-motion recommended for high arm rotation speeds.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="md:hidden sticky bottom-0 z-50 bg-charcoal-900/95 backdrop-blur-md border-t border-charcoal-700/60 flex justify-around py-2 text-[10px] font-bold">
+        <button onclick="switchTab('home')" class="p-1.5 text-center text-gray-400 hover:text-lime-400 flex flex-col items-center">
+            <span>🏠</span> Home
+        </button>
+        <button onclick="switchTab('analyze')" class="p-1.5 text-center text-gray-400 hover:text-lime-400 flex flex-col items-center">
+            <span>🎥</span> Analyze
+        </button>
+        <button onclick="switchTab('progress')" class="p-1.5 text-center text-gray-400 hover:text-lime-400 flex flex-col items-center">
+            <span>📈</span> Progress
+        </button>
+        <button onclick="switchTab('tutor')" class="p-1.5 text-center text-gray-400 hover:text-lime-400 flex flex-col items-center">
+            <span>🏏</span> Tutor
+        </button>
+        <button onclick="switchTab('profile')" class="p-1.5 text-center text-gray-400 hover:text-lime-400 flex flex-col items-center">
+            <span>👤</span> Profile
+        </button>
+    </nav>
+
+    <!-- Dismiss / Correction Feedback Modal -->
+    <div id="feedbackModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="card-athletic rounded-3xl p-6 max-w-md w-full space-y-4">
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <span>✍️</span> Feedback on Coaching Observation
+            </h3>
+            <p class="text-xs text-gray-300">
+                Help refine the model. If an observation was inaccurate or affected by camera angle, you can dismiss it or provide a correction note.
+            </p>
+            <div class="space-y-2">
+                <label class="block text-xs font-bold text-gray-400">Coach / Player Note:</label>
+                <textarea id="feedbackText" rows="3" placeholder="e.g., Camera was placed at an angle; my arm was straight in reality..." class="w-full bg-charcoal-900 border border-charcoal-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-lime-500"></textarea>
+            </div>
+            <div class="flex justify-end gap-2 text-xs">
+                <button onclick="closeFeedbackModal()" class="px-4 py-2 rounded-xl bg-charcoal-850 hover:bg-charcoal-800 text-gray-300 border border-charcoal-700">Cancel</button>
+                <button onclick="submitFeedback(true)" class="px-4 py-2 rounded-xl bg-lime-500 hover:bg-lime-400 text-charcoal-950 font-black">Dismiss & Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camera Guidance Modal -->
+    <div id="cameraGuideModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="card-athletic rounded-3xl p-6 max-w-lg w-full space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <span>📐</span> Camera Setup Guidance
+                </h3>
+                <button onclick="closeCameraGuideModal()" class="text-gray-400 hover:text-white text-lg">&times;</button>
+            </div>
+            <div class="space-y-3 text-xs text-gray-300">
+                <div class="p-3 bg-charcoal-900 rounded-xl border border-charcoal-700">
+                    <strong class="text-lime-400 block mb-1">Side-On (Perpendicular to Pitch) — Best for Elbows</strong>
+                    Place phone 5-7 meters from popping crease at waist height (1.0m - 1.2m). Ensure full body is visible from run-up stride to release.
+                </div>
+                <div class="p-3 bg-charcoal-900 rounded-xl border border-charcoal-700">
+                    <strong class="text-cyan-400 block mb-1">Front-On (Behind Stumps) — Best for Alignment</strong>
+                    Position 6-8 meters behind target stumps at chest height (1.2m - 1.5m). Ideal for detecting head fall-away and trunk tilt.
+                </div>
+            </div>
+            <button onclick="closeCameraGuideModal()" class="w-full py-2.5 rounded-xl bg-lime-500 hover:bg-lime-400 text-charcoal-950 font-black text-xs transition">Got it!</button>
+        </div>
+    </div>
+
+    <!-- Application JavaScript Layer -->
+    <script>
+        // State
+        let currentActivityMode = 'Bowling';
+        let latestAnalysisSession = null;
+        let sessionHistoryList = [];
+
+        // 1. Tab Switching
+        function switchTab(tabId) {
+            const tabs = ['home', 'analyze', 'progress', 'tutor', 'profile'];
+            tabs.forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                const nav = document.getElementById(`tabNav-${t}`);
+                if (el) el.classList.toggle('hidden', t !== tabId);
+                if (nav) nav.classList.toggle('active', t === tabId);
+            });
+            if (tabId === 'home' || tabId === 'progress') {
+                fetchHistory();
+            }
+        }
+
+        // 2. Activity Mode
+        function setActivityMode(mode) {
+            currentActivityMode = mode;
+            const btnBowl = document.getElementById('btnModeBowling');
+            const btnBat = document.getElementById('btnModeBatting');
+            if (mode === 'Bowling') {
+                btnBowl.className = 'px-4 py-1.5 rounded-lg bg-lime-500 text-charcoal-950 font-black transition';
+                btnBat.className = 'px-4 py-1.5 rounded-lg text-gray-300 hover:text-white transition';
+            } else {
+                btnBat.className = 'px-4 py-1.5 rounded-lg bg-lime-500 text-charcoal-950 font-black transition';
+                btnBowl.className = 'px-4 py-1.5 rounded-lg text-gray-300 hover:text-white transition';
+            }
+        }
+
+        // 3. File Selection & Drag Drop
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            uploadAndAnalyze(file);
+        }
+
+        const dropZone = document.getElementById('dropZone');
+        ['dragenter', 'dragover'].forEach(name => {
+            dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.add('border-lime-500'); });
+        });
+        ['dragleave', 'drop'].forEach(name => {
+            dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.remove('border-lime-500'); });
+        });
+        dropZone.addEventListener('drop', (e) => {
+            if (e.dataTransfer.files.length) uploadAndAnalyze(e.dataTransfer.files[0]);
+        });
+
+        // 4. Sample Preset Loader
+        async function loadSamplePreset(presetUrl, mode) {
+            setActivityMode(mode);
+            showSpinner(true, 'Loading Sample Broadcast Clip...', 'Fetching high-speed test video from server');
+            try {
+                const resp = await fetch('/' + presetUrl);
+                const blob = await resp.blob();
+                const fname = presetUrl.split('/').pop();
+                const file = new File([blob], fname, { type: 'video/mp4' });
+                await uploadAndAnalyze(file);
+            } catch (err) {
+                alert('Sample load error: ' + err.message);
+                showSpinner(false);
+            }
+        }
+
+        // 5. Ingestion & Analysis
+        async function uploadAndAnalyze(file) {
+            showSpinner(true, 'Running 33 3D Biomechanical Pose Extraction...', 'MediaPipe Pose Landmarker + Temporal Phase Segmentation');
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('activity_type', currentActivityMode);
+            formData.append('player_name', document.getElementById('profName')?.value || 'Grassroots Player');
+
+            try {
+                const res = await fetch('/api/analyze/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.message || 'Analysis processing failed');
+                }
+                const data = await res.json();
+                latestAnalysisSession = data;
+                renderResults(data);
+                fetchHistory();
+            } catch (err) {
+                alert('Analysis Error: ' + err.message);
+            } finally {
+                showSpinner(false);
+            }
+        }
+
+        function showSpinner(show, title, subtitle) {
+            const sp = document.getElementById('analysisSpinner');
+            if (sp) sp.classList.toggle('hidden', !show);
+            if (title) document.getElementById('spinnerText').innerText = title;
+            if (subtitle) document.getElementById('spinnerSubtext').innerText = subtitle;
+        }
+
+        // 6. Render Results with Structured Coaching Hierarchy
+        function renderResults(data) {
+            const container = document.getElementById('resultsContainer');
+            container.classList.remove('hidden');
+
+            // 1. Primary Observation Hierarchy
+            if (data.primary_observation) {
+                const obs = data.primary_observation;
+                document.getElementById('resMainObs').innerText = obs.main_observation;
+                document.getElementById('resWhatMeans').innerText = obs.what_this_means;
+                document.getElementById('resConfidenceBadge').innerText = obs.confidence_label.toUpperCase();
+                document.getElementById('resDrillName').innerText = obs.drill_name;
+                document.getElementById('resDrillEquip').innerText = 'Equipment: ' + obs.drill_equipment;
+                document.getElementById('resDrillSafety').innerText = obs.safety_guidance || '';
+                document.getElementById('resNextFocus').innerText = obs.next_session_focus;
+
+                // Steps
+                const ul = document.getElementById('resDrillSteps');
+                ul.innerHTML = '';
+                if (data.drills && data.drills.length > 0 && data.drills[0].instructions) {
+                    data.drills[0].instructions.forEach(step => {
+                        const li = document.createElement('li');
+                        li.innerText = step;
+                        ul.appendChild(li);
+                    });
+                }
+            }
+
+            // 2. Visual Overlay
+            if (data.annotated_media_b64) {
+                document.getElementById('resAnnotatedImg').src = 'data:image/jpeg;base64,' + data.annotated_media_b64;
+            }
+
+            // 3. Metrics
+            document.getElementById('resStatusBadge').innerText = data.icc_status;
+            document.getElementById('resStatusBadge').className = data.is_legal
+                ? 'text-xs px-2.5 py-0.5 rounded-full font-black bg-lime-500/20 text-lime-400 border border-lime-500/30'
+                : 'text-xs px-2.5 py-0.5 rounded-full font-black bg-red-500/20 text-red-400 border border-red-500/30';
+
+            document.getElementById('resLblElbow').innerText = data.elbow_extension_deg + '°';
+            document.getElementById('resLblKnee').innerText = data.front_knee_angle_deg + '°';
+
+            document.getElementById('resElbowVal').innerText = data.elbow_extension_deg + '°';
+            document.getElementById('resIccStatus').innerText = data.icc_status;
+            document.getElementById('resSpeedKmh').innerText = data.release_speed_kmh > 0 ? `${data.release_speed_kmh} km/h` : 'Speed Unavailable';
+            document.getElementById('resSpeedNote').innerText = data.release_speed_kmh > 0 ? `${data.release_speed_mph} mph` : 'Requires multi-frame calibrated pitch points';
+
+            document.getElementById('resTwinLegend').innerText = data.matched_legend;
+            document.getElementById('resTwinStyle').innerText = data.style_category;
+            document.getElementById('resPitchZone').innerText = data.pitch_zone;
+
+            if (data.screening_disclaimer) {
+                document.getElementById('resDisclaimer').innerText = data.screening_disclaimer;
+            }
+
+            container.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 7. Text to Speech (Audio Coach)
+        function speakMainObservation() {
+            if (!('speechSynthesis' in window)) {
+                alert('Text-to-speech audio playback is not supported on this browser.');
+                return;
+            }
+            const obs = document.getElementById('resMainObs')?.innerText || '';
+            const means = document.getElementById('resWhatMeans')?.innerText || '';
+            const textToSpeak = `Coach observation: ${obs}. What this means: ${means}.`;
+
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            utterance.rate = 0.95;
+            utterance.pitch = 1.0;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // 8. Fetch History
+        async function fetchHistory() {
+            try {
+                const res = await fetch('/api/history');
+                const list = await res.json();
+                sessionHistoryList = list;
+
+                // Update Home preview
+                const homeRecent = document.getElementById('homeRecentSessions');
+                if (homeRecent) {
+                    if (list.length === 0) {
+                        homeRecent.innerHTML = '<div class="text-center py-4 text-xs text-gray-400">No sessions recorded yet. Analyze your first video!</div>';
+                    } else {
+                        homeRecent.innerHTML = list.slice(0, 3).map(s => `
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-charcoal-900 border border-charcoal-800 text-xs">
+                                <div>
+                                    <span class="font-bold text-white">${s.activity_type} Session</span>
+                                    <span class="text-gray-400 ml-2">Score: ${s.accuracy_score}/100</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="${s.is_legal ? 'text-lime-400' : 'text-red-400'} font-bold">${s.is_legal ? 'Legal' : 'Screening Flag'}</span>
+                                    <span class="text-gray-400">${s.created_at || ''}</span>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+
+                // Update Progress Comparison dropdowns
+                const selA = document.getElementById('compSessionA');
+                const selB = document.getElementById('compSessionB');
+                if (selA && selB) {
+                    const opts = list.map(s => `<option value="${s.session_id}">${s.created_at || s.session_id.slice(0,8)} — ${s.activity_type} (${s.accuracy_score} pts)</option>`).join('');
+                    selA.innerHTML = '<option value="">Select Baseline Session A...</option>' + opts;
+                    selB.innerHTML = '<option value="">Select Current Session B...</option>' + opts;
+                    if (list.length >= 2) {
+                        selA.selectedIndex = 2; // Earlier
+                        selB.selectedIndex = 1; // Later
+                    }
+                }
+
+                // Update History Table
+                const tbody = document.getElementById('historyTableBody');
+                if (tbody) {
+                    tbody.innerHTML = list.map(s => `
+                        <tr class="hover:bg-charcoal-900/50">
+                            <td class="py-2.5 font-medium text-gray-300">${s.created_at || 'Recent'}</td>
+                            <td class="py-2.5 font-semibold text-white">${s.activity_type}</td>
+                            <td class="py-2.5 text-gray-300">Screened</td>
+                            <td class="py-2.5"><span class="${s.is_legal ? 'text-lime-400' : 'text-red-400'} font-bold">${s.is_legal ? 'Legal' : 'Concern'}</span></td>
+                            <td class="py-2.5 font-bold text-white">${s.accuracy_score}</td>
+                            <td class="py-2.5 text-amber-300 font-semibold">${s.matched_legend || '--'}</td>
+                            <td class="py-2.5 text-right">
+                                <button onclick="deleteVideoFile('${s.session_id}')" class="text-red-400 hover:text-red-300 text-[11px] font-bold">Delete Video</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error('History fetch error:', err);
+            }
+        }
+
+        // 9. Session Comparator (Before vs After Delta)
+        async function executeSessionComparison() {
+            const a = document.getElementById('compSessionA')?.value;
+            const b = document.getElementById('compSessionB')?.value;
+            if (!a || !b) {
+                alert('Please select both Session A and Session B from the dropdowns.');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/sessions/compare', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_a_id: a, session_b_id: b })
+                });
+                if (!res.ok) throw new Error('Comparison failed');
+                const data = await res.json();
+
+                const box = document.getElementById('comparisonResultsBox');
+                box.classList.remove('hidden');
+
+                document.getElementById('compVerdictBadge').innerText = data.overall_progress_status.replace('_', ' ');
+                document.getElementById('compDaysBetween').innerText = `${data.days_between} days between sessions`;
+                document.getElementById('compCoachVerdict').innerText = data.coach_verdict;
+
+                const kneeDelta = data.metric_deltas.front_knee?.delta_value || 0;
+                const elbowDelta = data.metric_deltas.elbow_extension?.delta_value || 0;
+                const scoreDelta = data.scorecard_delta || 0;
+
+                document.getElementById('compDeltaKnee').innerText = `${kneeDelta >= 0 ? '+' : ''}${kneeDelta}° (Bracing)`;
+                document.getElementById('compDeltaElbow').innerText = `${elbowDelta <= 0 ? '' : '+'}${elbowDelta}° (Elbow)`;
+                document.getElementById('compDeltaScore').innerText = `${scoreDelta >= 0 ? '+' : ''}${scoreDelta} pts`;
+
+                const ul = document.getElementById('compImprovementsList');
+                ul.innerHTML = data.key_improvements.map(imp => `<li>${imp}</li>`).join('');
+            } catch (err) {
+                alert('Comparison Error: ' + err.message);
+            }
+        }
+
+        // 10. Multi-Delivery Consistency Analysis
+        async function runSampleMultiDelivery() {
+            const sampleDeliveries = [
+                { delivery_number: 1, elbow_extension_deg: 7.0, front_knee_angle_deg: 168.0, trunk_tilt_deg: 12.0, release_speed_kmh: 122.0 },
+                { delivery_number: 2, elbow_extension_deg: 8.0, front_knee_angle_deg: 166.0, trunk_tilt_deg: 13.0, release_speed_kmh: 123.0 },
+                { delivery_number: 3, elbow_extension_deg: 7.5, front_knee_angle_deg: 167.0, trunk_tilt_deg: 12.5, release_speed_kmh: 121.5 },
+                { delivery_number: 4, elbow_extension_deg: 8.2, front_knee_angle_deg: 135.0, trunk_tilt_deg: 13.0, release_speed_kmh: 114.0 }
+            ];
+
+            try {
+                const res = await fetch('/api/analyze/multi-delivery', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ player_name: 'Grassroots Bowler', deliveries: sampleDeliveries })
+                });
+                const data = await res.json();
+
+                const box = document.getElementById('multiDeliveryResults');
+                box.innerHTML = `
+                    <div class="p-4 rounded-xl bg-charcoal-900 border border-charcoal-700 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs px-3 py-1 rounded-full font-black bg-lime-500 text-charcoal-950">${data.repeatability_label}</span>
+                            <span class="text-xs text-lime-400 font-bold">Repeatability Score: ${data.overall_repeatability_score}/100</span>
+                        </div>
+                        <p class="text-xs text-gray-200"><strong>Primary Inconsistency:</strong> ${data.primary_inconsistency}</p>
+                        ${data.fatigue_drift_detected ? `<p class="text-xs text-amber-300 font-medium">⚠️ <strong>Drift Detected:</strong> ${data.drift_explanation}</p>` : ''}
+                        ${data.flagged_outliers.length > 0 ? `
+                            <div class="text-xs text-red-400">
+                                <strong>Flagged Outlier:</strong> Ball ${data.flagged_outliers[0].delivery_number} — ${data.flagged_outliers[0].flaw} (${data.flagged_outliers[0].measured} vs avg ${data.flagged_outliers[0].average})
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            } catch (err) {
+                alert('Multi-delivery error: ' + err.message);
+            }
+        }
+
+        // 11. Weekly Plan Generator
+        async function generateWeeklyPlan() {
+            const flaw = document.getElementById('planFlawSelect')?.value || 'collapsed_front_knee';
+            const level = document.getElementById('planLevelSelect')?.value || 'Intermediate';
+
+            try {
+                const res = await fetch('/api/tutor/weekly-plan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ player_name: 'Player', primary_flaw: flaw, skill_level: level })
+                });
+                const data = await res.json();
+
+                const out = document.getElementById('weeklyPlanOutput');
+                out.innerHTML = `
+                    <div class="mb-3 text-xs text-lime-400 font-bold">Goal: ${data.weekly_goal}</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                        ${data.daily_schedule.map(d => `
+                            <div class="card-athletic rounded-xl p-3 border-l-4 ${d.is_rest_day ? 'border-l-gray-600 opacity-75' : 'border-l-lime-500'}">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="font-extrabold text-xs text-white">${d.day_name}</span>
+                                    <span class="text-[10px] text-gray-400">${d.duration_minutes}m</span>
+                                </div>
+                                <p class="text-xs font-semibold text-lime-300 truncate">${d.focus_theme}</p>
+                                ${d.drills.length > 0 ? `<p class="text-[11px] text-gray-300 mt-1">Drill: ${d.drills[0].name}</p>` : '<p class="text-[11px] text-gray-400 mt-1">Active recovery</p>'}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (err) {
+                alert('Weekly plan error: ' + err.message);
+            }
+        }
+
+        // 12. Interactive Q&A Chat
+        async function askTutorPrompt(prompt) {
+            document.getElementById('chatInput').value = prompt;
+            sendChatMessage();
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            const box = document.getElementById('chatHistoryBox');
+            box.innerHTML += `<div class="p-2.5 rounded-lg bg-charcoal-800 text-white font-medium"><strong>You:</strong> ${msg}</div>`;
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
+
+            try {
+                const res = await fetch('/api/coaching/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg, language: 'English' })
+                });
+                const data = await res.json();
+                box.innerHTML += `<div class="p-2.5 rounded-lg bg-charcoal-850 text-gray-200 border border-charcoal-700/60"><strong class="text-lime-400">CricTutor:</strong> ${data.reply}</div>`;
+                box.scrollTop = box.scrollHeight;
+            } catch (err) {
+                box.innerHTML += `<div class="p-2 text-red-400">Error connecting to coach.</div>`;
+            }
+        }
+
+        // 13. Privacy & Video Cleanup
+        async function deleteVideoFile(sessionId) {
+            if (!confirm('Delete raw video file to free up local storage? Your biomechanical angles, scorecard, and reports will be retained.')) return;
+            try {
+                const res = await fetch(`/api/sessions/${sessionId}/video`, { method: 'DELETE' });
+                const data = await res.json();
+                alert(data.message || 'Video file deleted successfully.');
+                fetchHistory();
+            } catch (err) {
+                alert('Deletion error: ' + err.message);
+            }
+        }
+
+        async function purgeRecentVideo() {
+            if (!latestAnalysisSession) {
+                alert('No active session in memory to purge.');
+                return;
+            }
+            deleteVideoFile(latestAnalysisSession.session_id);
+        }
+
+        // 14. Modals
+        function openFeedbackModal() { document.getElementById('feedbackModal').classList.remove('hidden'); }
+        function closeFeedbackModal() { document.getElementById('feedbackModal').classList.add('hidden'); }
+        function openCameraGuideModal() { document.getElementById('cameraGuideModal').classList.remove('hidden'); }
+        function closeCameraGuideModal() { document.getElementById('cameraGuideModal').classList.add('hidden'); }
+
+        async function submitFeedback(dismiss) {
+            if (!latestAnalysisSession || !latestAnalysisSession.primary_observation) {
+                closeFeedbackModal();
+                return;
+            }
+            const obsId = latestAnalysisSession.primary_observation.observation_id;
+            const note = document.getElementById('feedbackText').value;
+
+            try {
+                await fetch(`/api/observations/${obsId}/feedback`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ dismiss: dismiss, user_correction: note })
+                });
+                alert('Feedback submitted. The observation has been dismissed.');
+                closeFeedbackModal();
+            } catch (err) {
+                alert('Error submitting feedback: ' + err.message);
+            }
+        }
+
+        // PWA Service Worker Registration & Install Prompt
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(e => console.log('SW registration error:', e));
+            });
+        }
+
+        let deferredInstallPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            const btn = document.getElementById('btnInstallPwa');
+            if (btn) btn.classList.remove('hidden');
+        });
+
+        function installPwa() {
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                deferredInstallPrompt.userChoice.then(() => {
+                    deferredInstallPrompt = null;
+                });
+            } else {
+                alert('Install Instructions:\n• Android/Chrome: Tap (⋮) in the top-right -> "Install app" or "Add to Home screen".\n• iPhone/Safari: Tap Share (⎋) -> "Add to Home Screen".');
+            }
+        }
+
+        function saveProfile() {
+            alert('Preferences saved locally!');
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchHistory();
+        });
+    </script>
+</body>
+</html>

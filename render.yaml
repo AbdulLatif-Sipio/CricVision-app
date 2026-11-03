@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: cricvision
+    runtime: docker
+    dockerfilePath: Dockerfile
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: FORCE_HTTPS
+        value: "true"
+      - key: DATABASE_URL
+        value: sqlite:///./cricvision.db
+      - key: GEMINI_API_KEY
+        sync: false
