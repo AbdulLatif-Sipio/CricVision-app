@@ -50,31 +50,41 @@ class PoseDetector:
     """
 
     def __init__(self, model_path: Optional[str] = None, smoothing_alpha: float = 0.7):
+        self.landmarker = None
+        self.initialization_error: Optional[str] = None
+        self.smoothing_alpha = smoothing_alpha
+        self.prev_landmarks: Optional[np.ndarray] = None
+
         if model_path is None:
             # Default to bundled model in models/
             base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             model_path = os.path.join(base_dir, "models", "pose_landmarker_full.task")
 
         if not os.path.exists(model_path):
-            raise FileNotFoundError(f"Model file not found at {model_path}")
+            self.initialization_error = f"Model file not found at {model_path}"
+            return
 
-        base_options = python.BaseOptions(model_asset_path=model_path)
-        options = vision.PoseLandmarkerOptions(
-            base_options=base_options,
-            output_segmentation_masks=False,
-            min_pose_detection_confidence=0.5,
-            min_pose_presence_confidence=0.5,
-            min_tracking_confidence=0.5
-        )
-        self.landmarker = vision.PoseLandmarker.create_from_options(options)
-        self.smoothing_alpha = smoothing_alpha
-        self.prev_landmarks: Optional[np.ndarray] = None
+        try:
+            base_options = python.BaseOptions(model_asset_path=model_path)
+            options = vision.PoseLandmarkerOptions(
+                base_options=base_options,
+                output_segmentation_masks=False,
+                min_pose_detection_confidence=0.5,
+                min_pose_presence_confidence=0.5,
+                min_tracking_confidence=0.5
+            )
+            self.landmarker = vision.PoseLandmarker.create_from_options(options)
+        except Exception as e:
+            self.initialization_error = str(e)
 
     def detect_frame(self, frame_bgr: np.ndarray) -> Optional[np.ndarray]:
         """
         Detects 33 landmarks for a single BGR image frame.
         Returns numpy array of shape (33, 3) [x, y, z] normalized, or None if no pose found.
         """
+        if self.landmarker is None:
+            return None
+
         rgb_frame = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
         detection_result = self.landmarker.detect(mp_image)

@@ -169,6 +169,11 @@ st.sidebar.info("💡 **Tip:** Works on any camera or phone video! No sensors or
 st.markdown("<div class='brand-title'>🏏 CricVision — Your AI Cricket Coach</div>", unsafe_allow_html=True)
 st.markdown("<div class='brand-subtitle'>Upload a video or photo of your bowling or batting. CricTutor will analyze your foot placement, arm angles, speed, and tell you exactly what you did right, what mistakes you made, and what you should have done instead!</div>", unsafe_allow_html=True)
 
+if detector.initialization_error:
+    st.info(
+        "ℹ️ **Pro-Tip for Live MediaPipe Tracking**: For 100% native camera landmark tracking on Streamlit Cloud, switch Python to **3.11** (Click **Manage app** at bottom-right ➔ **Settings** ➔ **Python version: 3.11**)."
+    )
+
 # Main Media Source Tabs (Very user-friendly!)
 tab_upload, tab_camera, tab_samples = st.tabs([
     "📁 Upload Your Video or Photo",
