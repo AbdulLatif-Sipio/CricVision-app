@@ -45,7 +45,7 @@ from ml.technique_scorer import TechniqueScorer, TechniqueScorecard
 from coaching.drill_matrix import DrillEngine, PrescriptiveDrill
 from coaching.crictutor_llm import CricTutorAI
 from coaching.weekly_planner import WeeklyPlanner, WeeklyTrainingPlan
-from engine.multi_delivery import MultiDeliveryConsistency
+from engine.multi_delivery import MultiDeliveryAnalyzer, MultiDeliveryConsistency
 from engine.session_comparator import SessionComparator
 from data.sample_generator import CricketSampleGenerator
 

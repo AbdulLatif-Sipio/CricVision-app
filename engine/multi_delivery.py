@@ -236,3 +236,8 @@ class MultiDeliveryAnalyzer:
             recommended_drill=rec_drill,
             delivery_comparisons=comparisons
         )
+
+
+# Backward-compatible alias
+MultiDeliveryConsistency = MultiDeliveryAnalyzer
+
